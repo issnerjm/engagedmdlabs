@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EngagedMD Labs</title>
+  <meta name="description" content="Internal tools and design explorations from the EngagedMD product team.">
+  <style>
+    /* ── Fonts ──────────────────────────────────────────────────────────── */
+    @font-face {
+      font-family: "Recoleta";
+      src: url("fonts/Recoleta-Regular.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Recoleta";
+      src: url("fonts/Recoleta-Medium.otf") format("opentype");
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Figtree";
+      src: url("fonts/Figtree-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Figtree";
+      src: url("fonts/Figtree-SemiBold.ttf") format("truetype");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ── Design tokens ──────────────────────────────────────────────────── */
+    :root {
+      --emd-dark-green: #005459;
+      --emd-cream:      #fff2e3;
+      --emd-teal:       #05c9bf;
+      --emd-pink:       #f54fb0;
+      --emd-orange:     #ff9663;
+
+      --emd-green-900:  #003d40;
+      --emd-green-800:  #00474b;
+      --emd-green-600:  #0b6a6f;
+      --emd-green-100:  #dcecee;
+      --emd-green-50:   #ecf4f5;
+
+      --emd-cream-50:   #fffaf2;
+      --emd-cream-200:  #fde6cc;
+
+      --emd-ink:        #0d2123;
+      --emd-ink-2:      #2e4649;
+      --emd-ink-3:      #5a7174;
+      --emd-ink-4:      #8ea0a2;
+      --emd-line:       #e3e7e5;
+      --emd-surface:    #ffffff;
+      --emd-surface-2:  #fafaf7;
+      --emd-surface-3:  #f3f1ec;
+
+      --emd-success:    #1e9e5a;
+
+      --font-display: "Recoleta", "Fraunces", "Georgia", serif;
+      --font-sans:    "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+      --fs-h1:      clamp(36px, 4.2vw, 52px);
+      --fs-h3:      clamp(22px, 2.2vw, 26px);
+      --fs-body-lg: 18px;
+      --fs-body:    16px;
+      --fs-sm:      14px;
+      --fs-xs:      12px;
+      --fs-eyebrow: 11px;
+
+      --lh-tight:  1.12;
+      --lh-snug:   1.25;
+      --lh-body:   1.6;
+
+      --tr-heading: -0.01em;
+      --tr-eyebrow:  0.1em;
+
+      --r-sm:  6px;
+      --r-lg:  16px;
+      --r-pill: 999px;
+
+      --sp-3: 12px;
+      --sp-4: 16px;
+      --sp-5: 20px;
+      --sp-6: 24px;
+      --sp-7: 32px;
+      --sp-9: 48px;
+      --sp-11: 80px;
+
+      --sh-sm: 0 2px 6px rgba(0, 50, 54, 0.08);
+      --sh-md: 0 8px 20px rgba(0, 50, 54, 0.12);
+
+      --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+      --dur-fast: 120ms;
+    }
+
+    /* ── Reset & base ───────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-sans);
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+      color: var(--emd-ink);
+      background: var(--emd-cream);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    p { margin: 0; text-wrap: pretty; }
+
+    /* ── Layout ─────────────────────────────────────────────────────────── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────────────── */
+    .header {
+      padding: 56px 0 64px;
+    }
+
+    .header__brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .header__logo {
+      height: 32px;
+      width: auto;
+    }
+
+    .header__labs {
+      font-family: var(--font-sans);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      letter-spacing: var(--tr-eyebrow);
+      text-transform: uppercase;
+      color: var(--emd-cream);
+      background: var(--emd-dark-green);
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .header__title {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: var(--fs-h1);
+      line-height: var(--lh-tight);
+      letter-spacing: var(--tr-heading);
+      color: var(--emd-dark-green);
+      text-wrap: balance;
+      margin: 0 0 16px;
+    }
+
+    .header__lead {
+      font-size: var(--fs-body-lg);
+      color: var(--emd-ink-2);
+      max-width: 540px;
+      line-height: var(--lh-body);
+    }
+
+    /* ── Section ────────────────────────────────────────────────────────── */
+    .section {
+      padding-bottom: var(--sp-11);
+    }
+
+    .section__eyebrow {
+      font-family: var(--font-sans);
+      font-size: var(--fs-eyebrow);
+      font-weight: 600;
+      letter-spacing: var(--tr-eyebrow);
+      text-transform: uppercase;
+      color: var(--emd-ink-3);
+      margin-bottom: var(--sp-5);
+    }
+
+    /* ── Project grid ────────────────────────────────────────────────────── */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 16px;
+    }
+
+    /* ── Card ────────────────────────────────────────────────────────────── */
+    .card {
+      background: var(--emd-surface);
+      border-radius: var(--r-lg);
+      box-shadow: var(--sh-sm);
+      padding: var(--sp-6) var(--sp-7);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow var(--dur-fast) var(--ease-out),
+                  transform var(--dur-fast) var(--ease-out);
+    }
+
+    .card:hover {
+      box-shadow: var(--sh-md);
+      transform: translateY(-2px);
+    }
+
+    /* Card eyebrow row */
+    .card__eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card__icon {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .card__label {
+      font-family: var(--font-sans);
+      font-size: var(--fs-eyebrow);
+      font-weight: 600;
+      letter-spacing: var(--tr-eyebrow);
+      text-transform: uppercase;
+      color: var(--emd-dark-green);
+    }
+
+    /* Card title */
+    .card__title {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: var(--fs-h3);
+      line-height: var(--lh-snug);
+      letter-spacing: var(--tr-heading);
+      color: var(--emd-dark-green);
+      margin: 0;
+    }
+
+    /* Card description */
+    .card__desc {
+      font-size: var(--fs-sm);
+      color: var(--emd-ink-2);
+      line-height: var(--lh-body);
+      flex: 1;
+    }
+
+    /* Card footer row */
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--sp-3);
+    }
+
+    .card__cta {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--emd-dark-green);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: gap var(--dur-fast) var(--ease-out);
+    }
+
+    .card:hover .card__cta { gap: 8px; }
+
+    .card__cta-arrow {
+      /* Inline SVG arrow — matches the brand's single-stroke, rounded-cap style */
+    }
+
+    /* Status pills */
+    .pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: var(--r-pill);
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .pill--dev {
+      background: var(--emd-surface-3);
+      color: var(--emd-ink-3);
+    }
+
+    .pill--live {
+      background: #d6f0e3;
+      color: #13783f;
+    }
+
+    /* ── Divider ────────────────────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(0, 84, 89, 0.12);
+      margin: 0 0 var(--sp-6);
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────────────── */
+    .footer {
+      padding: var(--sp-6) 0 var(--sp-9);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer__logo {
+      height: 20px;
+      width: auto;
+      opacity: 0.5;
+    }
+
+    .footer__domain {
+      font-size: var(--fs-xs);
+      color: var(--emd-ink-4);
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .header { padding: 40px 0 48px; }
+      .header__labs { display: none; }
+      .project-grid { grid-template-columns: 1fr; }
+      .page { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header__brand">
+        <img
+          src="assets/logo.png"
+          alt="EngagedMD"
+          class="header__logo"
+        >
+        <span class="header__labs">Labs</span>
+      </div>
+      <h1 class="header__title">Internal tools and design explorations</h1>
+      <p class="header__lead">A space for the EngagedMD product team to build, experiment, and ship.</p>
+    </header>
+
+    <!-- Projects -->
+    <section class="section">
+      <p class="section__eyebrow">Projects</p>
+      <div class="project-grid">
+
+        <!-- Review Hub -->
+        <a href="#" class="card">
+          <div class="card__eyebrow">
+            <img src="assets/icons/magnifier.png" alt="" class="card__icon">
+            <span class="card__label">Clinical tools</span>
+          </div>
+          <h2 class="card__title">Review Hub</h2>
+          <p class="card__desc">
+            A staff tool for reviewing, organizing, and approving patient
+            consent videos. Built on React, Supabase, and AWS S3.
+          </p>
+          <div class="card__footer">
+            <span class="card__cta">
+              Open
+              <svg class="card__cta-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M2.5 7h9m0 0L8 3.5M11.5 7 8 10.5" stroke="#005459" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="pill pill--dev">In development</span>
+          </div>
+        </a>
+
+        <!-- Patient Portal Prototype -->
+        <a href="https://patient-portal-prototype-pied.vercel.app" class="card" target="_blank" rel="noopener noreferrer">
+          <div class="card__eyebrow">
+            <img src="assets/icons/journey-arrow.png" alt="" class="card__icon">
+            <span class="card__label">Patient experience</span>
+          </div>
+          <h2 class="card__title">Patient portal prototype</h2>
+          <p class="card__desc">
+            A living design lab for the EngagedMD patient app — tile-based
+            IVF home screen, cycle tracking, and connected sub-pages.
+          </p>
+          <div class="card__footer">
+            <span class="card__cta">
+              Open
+              <svg class="card__cta-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M2.5 7h9m0 0L8 3.5M11.5 7 8 10.5" stroke="#005459" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="pill pill--live">Live</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- Footer -->
+    <footer class="footer">
+      <img src="assets/logo.png" alt="EngagedMD" class="footer__logo">
+      <span class="footer__domain">engagedmdlabs.com</span>
+    </footer>
+
+  </div>
+</body>
+</html>
