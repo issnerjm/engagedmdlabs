@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — EngagedMD Labs</title>
+  <style>
+    @font-face {
+      font-family: "Recoleta";
+      src: url("../fonts/Recoleta-Regular.otf") format("opentype");
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: "Figtree";
+      src: url("../fonts/Figtree-Regular.ttf") format("truetype");
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: "Figtree";
+      src: url("../fonts/Figtree-SemiBold.ttf") format("truetype");
+      font-weight: 600; font-style: normal; font-display: swap;
+    }
+
+    :root {
+      --green:      #005459;
+      --green-dark: #003d40;
+      --green-50:   #ecf4f5;
+      --cream:      #fff2e3;
+      --teal:       #05c9bf;
+      --ink:        #0d2123;
+      --ink-2:      #2e4649;
+      --ink-3:      #5a7174;
+      --ink-4:      #8ea0a2;
+      --line:       #e3e7e5;
+      --surface:    #ffffff;
+      --surface-2:  #fafaf7;
+      --surface-3:  #f3f1ec;
+      --danger:     #c0392b;
+      --danger-bg:  #fdecea;
+      --sh-sm:      0 2px 6px rgba(0,50,54,0.08);
+      --sh-md:      0 8px 20px rgba(0,50,54,0.12);
+      --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-pill: 999px;
+      --ease: cubic-bezier(0.2,0.7,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      font-family: "Figtree", system-ui, sans-serif;
+      font-size: 15px; line-height: 1.55;
+      color: var(--ink); background: var(--surface-2);
+      -webkit-font-smoothing: antialiased;
+    }
+    h1,h2,h3 { font-family: "Recoleta", Georgia, serif; font-weight: 400; margin: 0; }
+    p { margin: 0; }
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { display: block; }
+
+    /* ── Nav ── */
+    .nav {
+      background: rgba(255,242,227,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,84,89,0.08);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav__inner {
+      max-width: 860px; margin: 0 auto;
+      padding: 14px 24px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .nav__logo { height: 26px; width: auto; }
+    .nav__badge {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--cream); background: var(--green);
+      padding: 3px 9px; border-radius: var(--r-pill);
+    }
+    .nav__back {
+      margin-left: auto;
+      font-size: 13px; font-weight: 600; color: var(--ink-3);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .nav__back:hover { color: var(--green); text-decoration: none; }
+
+    /* ── Page ── */
+    .page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* ── Auth screen ── */
+    .auth {
+      max-width: 440px; margin: 60px auto 0;
+      background: var(--surface); border-radius: var(--r-lg);
+      box-shadow: var(--sh-sm); padding: 36px;
+    }
+    .auth h2 { font-size: 24px; color: var(--green); margin-bottom: 8px; }
+    .auth p { color: var(--ink-3); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+    .auth a { font-weight: 600; }
+
+    /* ── Forms ── */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+    .field input, .field textarea, .field select {
+      font-family: inherit; font-size: 14px;
+      padding: 10px 12px; border-radius: var(--r-sm);
+      border: 1px solid var(--line); background: var(--surface);
+      color: var(--ink); outline: none;
+      transition: border-color 120ms var(--ease), box-shadow 120ms var(--ease);
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(5,201,191,0.25);
+    }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field .hint { font-size: 12px; color: var(--ink-4); }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: inherit; font-weight: 600; font-size: 14px;
+      padding: 10px 18px; border-radius: var(--r-pill);
+      border: none; cursor: pointer; line-height: 1;
+      transition: background 120ms var(--ease), transform 80ms var(--ease);
+      text-decoration: none;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn--primary { background: var(--green); color: var(--cream); }
+    .btn--primary:hover { background: var(--green-dark); }
+    .btn--ghost {
+      background: transparent; color: var(--ink-2);
+      border: 1px solid var(--line);
+    }
+    .btn--ghost:hover { background: var(--surface-3); border-color: var(--ink-4); }
+    .btn--danger { background: var(--danger-bg); color: var(--danger); border: 1px solid #f5c6c2; }
+    .btn--danger:hover { background: #fad4d1; }
+    .btn--sm { padding: 7px 14px; font-size: 13px; }
+
+    /* ── Section header ── */
+    .section-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-head h2 { font-size: 28px; color: var(--green); }
+
+    /* ── Project rows ── */
+    .project-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .project-row {
+      background: var(--surface); border-radius: var(--r-lg);
+      box-shadow: var(--sh-sm);
+      padding: 18px 20px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .project-row__icon {
+      width: 32px; height: 32px;
+      object-fit: contain; flex-shrink: 0;
+    }
+    .project-row__info { flex: 1; min-width: 0; }
+    .project-row__title {
+      font-family: "Recoleta", Georgia, serif;
+      font-size: 17px; color: var(--green);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .project-row__meta {
+      font-size: 12px; color: var(--ink-3);
+      display: flex; align-items: center; gap: 8px; margin-top: 2px;
+      flex-wrap: wrap;
+    }
+    .project-row__actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    /* Status pills */
+    .pill {
+      font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: var(--r-pill);
+      letter-spacing: 0.02em; line-height: 1.4;
+    }
+    .pill--dev      { background: var(--surface-3); color: var(--ink-3); }
+    .pill--live     { background: #d6f0e3; color: #13783f; }
+    .pill--internal { background: #fde8d4; color: #a04a00; }
+
+    /* ── Form panel ── */
+    .form-panel {
+      background: var(--surface); border-radius: var(--r-lg);
+      box-shadow: var(--sh-md); padding: 28px 32px;
+      margin-top: 16px;
+      display: none;
+    }
+    .form-panel.is-open { display: block; }
+    .form-panel h3 { font-size: 20px; color: var(--green); margin-bottom: 20px; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-actions {
+      display: flex; align-items: center; gap: 10px;
+      margin-top: 20px;
+    }
+
+    /* ── Icon picker ── */
+    .icon-grid {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;
+    }
+    .icon-opt {
+      width: 48px; height: 48px;
+      border: 2px solid var(--line); border-radius: var(--r-sm);
+      background: var(--surface-2);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: border-color 120ms var(--ease);
+      position: relative;
+    }
+    .icon-opt img { width: 28px; height: 28px; object-fit: contain; }
+    .icon-opt.selected { border-color: var(--green); background: var(--green-50); }
+    .icon-opt input[type=radio] {
+      position: absolute; opacity: 0; width: 0; height: 0;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      background: var(--green); color: var(--cream);
+      font-size: 14px; font-weight: 600;
+      padding: 12px 22px; border-radius: var(--r-pill);
+      box-shadow: var(--sh-md);
+      opacity: 0; transition: opacity 220ms var(--ease);
+      pointer-events: none; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+    .toast.error { background: var(--danger); }
+
+    /* ── Empty state ── */
+    .empty {
+      text-align: center; padding: 48px 24px;
+      color: var(--ink-4); font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid .full { grid-column: 1; }
+      .page { padding: 24px 16px 64px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <img src="../assets/logo.png" alt="EngagedMD" class="nav__logo">
+      <span class="nav__badge">Admin</span>
+      <a href="/" class="nav__back">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11.5 7h-9m0 0L6 3.5M2.5 7 6 10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to site
+      </a>
+    </div>
+  </nav>
+
+  <!-- Auth screen (shown until token is set) -->
+  <div id="auth-screen" class="page" style="display:none">
+    <div class="auth">
+      <h2>Sign in</h2>
+      <p>
+        Enter a GitHub personal access token with <strong>Contents: Read &amp; Write</strong>
+        access to the <code>issnerjm/engagedmdlabs</code> repo. The token is stored
+        in your browser only.
+        <br><br>
+        <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">
+          Create a fine-grained token →
+        </a>
+      </p>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="field">
+          <label for="token-input">GitHub token</label>
+          <input id="token-input" type="password" placeholder="github_pat_…" autocomplete="off">
+        </div>
+        <button class="btn btn--primary" onclick="saveToken()">Continue</button>
+        <p id="token-error" style="color:var(--danger);font-size:13px;display:none"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main admin UI -->
+  <div id="admin-screen" class="page" style="display:none">
+
+    <div class="section-head">
+      <h2>Projects</h2>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn btn--ghost btn--sm" onclick="signOut()">Sign out</button>
+        <button class="btn btn--primary" onclick="openForm()">+ Add project</button>
+      </div>
+    </div>
+
+    <!-- Add / Edit form -->
+    <div id="form-panel" class="form-panel">
+      <h3 id="form-title">Add project</h3>
+      <input type="hidden" id="edit-id">
+      <div class="form-grid">
+        <div class="field full">
+          <label for="f-title">Title</label>
+          <input id="f-title" type="text" placeholder="Review Hub">
+        </div>
+        <div class="field">
+          <label for="f-category">Category label</label>
+          <input id="f-category" type="text" placeholder="Clinical tools">
+        </div>
+        <div class="field">
+          <label for="f-status">Status</label>
+          <select id="f-status">
+            <option value="beta">Beta</option>
+            <option value="internal">Internal only</option>
+            <option value="live">Live</option>
+            <option value="coming-soon">Coming soon</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="f-desc">Description</label>
+          <textarea id="f-desc" placeholder="A short description of the project…"></textarea>
+        </div>
+        <div class="field full">
+          <label for="f-url">URL</label>
+          <input id="f-url" type="url" placeholder="https://…  (leave blank if not yet deployed)">
+        </div>
+        <div class="field full">
+          <label>Icon</label>
+          <div class="icon-grid" id="icon-grid"></div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn--primary" onclick="saveProject()">Save project</button>
+        <button class="btn btn--ghost" onclick="closeForm()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Project list -->
+    <div id="project-list" class="project-list" style="margin-top:16px"></div>
+    <div id="empty-state" class="empty" style="display:none">No projects yet. Add one above.</div>
+
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    /* ── Config ─────────────────────────────────────────────────────────── */
+    const REPO  = 'issnerjm/engagedmdlabs';
+    const FILE  = 'projects.json';
+    const ICONS = [
+      { file: 'magnifier.png',    label: 'Magnifier' },
+      { file: 'journey-arrow.png',label: 'Journey' },
+      { file: 'laptop-e.png',     label: 'Laptop' },
+      { file: 'medical-cross.png',label: 'Medical' },
+      { file: 'mountains.png',    label: 'Mountains' },
+      { file: 'star.png',         label: 'Star' },
+    ];
+    const STATUS_MAP = {
+      beta:          { cls: 'pill--dev',      label: 'Beta' },
+      internal:      { cls: 'pill--internal', label: 'Internal only' },
+      live:          { cls: 'pill--live',     label: 'Live' },
+      'coming-soon': { cls: 'pill--dev',      label: 'Coming soon' },
+    };
+
+    /* ── State ───────────────────────────────────────────────────────────── */
+    let projects = [];
+    let fileSha  = null;
+
+    /* ── Auth ────────────────────────────────────────────────────────────── */
+    function getToken() { return localStorage.getItem('emd_labs_token') || ''; }
+
+    async function saveToken() {
+      const token = document.getElementById('token-input').value.trim();
+      const err   = document.getElementById('token-error');
+      err.style.display = 'none';
+      if (!token) return;
+      // Validate by fetching the file
+      const ok = await fetchProjects(token);
+      if (ok) {
+        localStorage.setItem('emd_labs_token', token);
+        showAdmin();
+      } else {
+        err.textContent = 'Token invalid or missing repo access. Check permissions and try again.';
+        err.style.display = 'block';
+      }
+    }
+
+    function signOut() {
+      localStorage.removeItem('emd_labs_token');
+      document.getElementById('admin-screen').style.display = 'none';
+      document.getElementById('token-input').value = '';
+      document.getElementById('auth-screen').style.display = 'block';
+    }
+
+    /* ── GitHub API ──────────────────────────────────────────────────────── */
+    async function apiGet(path, token) {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/${path}`, {
+        headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github+json' }
+      });
+      if (!r.ok) return null;
+      return r.json();
+    }
+
+    async function fetchProjects(token) {
+      const data = await apiGet(`contents/${FILE}`, token);
+      if (!data) return false;
+      fileSha  = data.sha;
+      projects = JSON.parse(atob(data.content.replace(/\s/g, '')));
+      return true;
+    }
+
+    async function commitProjects(msg) {
+      const token   = getToken();
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(projects, null, 2) + '\n')));
+      const body    = { message: msg, content, sha: fileSha };
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) return false;
+      const data = await r.json();
+      fileSha = data.content.sha;
+      return true;
+    }
+
+    /* ── Render ──────────────────────────────────────────────────────────── */
+    function renderList() {
+      const list  = document.getElementById('project-list');
+      const empty = document.getElementById('empty-state');
+      if (!projects.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+      empty.style.display = 'none';
+      const s = (p) => {
+        const m = STATUS_MAP[p.status] || STATUS_MAP.beta;
+        return `<span class="pill ${m.cls}">${m.label}</span>`;
+      };
+      list.innerHTML = projects.map((p, i) => `
+        <div class="project-row">
+          <img class="project-row__icon" src="../${p.icon}" alt="">
+          <div class="project-row__info">
+            <div class="project-row__title">${p.title}</div>
+            <div class="project-row__meta">
+              <span>${p.category}</span>
+              ${s(p)}
+              ${p.url && p.url !== '#' ? `<a href="${p.url}" target="_blank" rel="noopener" style="font-size:12px;color:var(--ink-4)">${p.url}</a>` : ''}
+            </div>
+          </div>
+          <div class="project-row__actions">
+            <button class="btn btn--ghost btn--sm" onclick="editProject(${i})">Edit</button>
+            <button class="btn btn--danger btn--sm" onclick="deleteProject(${i})">Delete</button>
+          </div>
+        </div>`).join('');
+    }
+
+    function buildIconPicker(selectedIcon) {
+      const grid = document.getElementById('icon-grid');
+      grid.innerHTML = ICONS.map(ic => {
+        const path = `assets/icons/${ic.file}`;
+        const sel  = path === selectedIcon ? 'selected' : '';
+        return `
+          <label class="icon-opt ${sel}" title="${ic.label}">
+            <input type="radio" name="icon" value="${path}" ${sel ? 'checked' : ''}
+                   onchange="document.querySelectorAll('.icon-opt').forEach(el=>el.classList.remove('selected'));this.closest('.icon-opt').classList.add('selected')">
+            <img src="../assets/icons/${ic.file}" alt="${ic.label}">
+          </label>`;
+      }).join('');
+    }
+
+    /* ── Form ────────────────────────────────────────────────────────────── */
+    function openForm(project, index) {
+      const panel = document.getElementById('form-panel');
+      document.getElementById('form-title').textContent = project ? 'Edit project' : 'Add project';
+      document.getElementById('edit-id').value  = index ?? '';
+      document.getElementById('f-title').value  = project?.title || '';
+      document.getElementById('f-category').value = project?.category || '';
+      document.getElementById('f-status').value = project?.status || 'beta';
+      document.getElementById('f-desc').value   = project?.description || '';
+      document.getElementById('f-url').value    = (project?.url && project.url !== '#') ? project.url : '';
+      buildIconPicker(project?.icon || 'assets/icons/magnifier.png');
+      panel.classList.add('is-open');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function closeForm() {
+      document.getElementById('form-panel').classList.remove('is-open');
+    }
+
+    function editProject(i) { openForm(projects[i], i); }
+
+    async function saveProject() {
+      const title    = document.getElementById('f-title').value.trim();
+      const category = document.getElementById('f-category').value.trim();
+      const desc     = document.getElementById('f-desc').value.trim();
+      const url      = document.getElementById('f-url').value.trim() || '#';
+      const status   = document.getElementById('f-status').value;
+      const iconEl   = document.querySelector('input[name=icon]:checked');
+      const icon     = iconEl ? iconEl.value : 'assets/icons/magnifier.png';
+      const editId   = document.getElementById('edit-id').value;
+
+      if (!title || !category || !desc) { toast('Fill in title, category, and description.', true); return; }
+
+      const entry = {
+        id:          title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+        title, category, description: desc, icon, url, status
+      };
+
+      if (editId !== '') {
+        projects[Number(editId)] = entry;
+      } else {
+        projects.push(entry);
+      }
+
+      const verb = editId !== '' ? 'Update' : 'Add';
+      const ok = await commitProjects(`${verb} project: ${title}`);
+      if (ok) {
+        closeForm();
+        renderList();
+        toast(`${verb}d "${title}" — deploying now…`);
+      } else {
+        toast('Failed to save. Check your token and try again.', true);
+      }
+    }
+
+    async function deleteProject(i) {
+      if (!confirm(`Delete "${projects[i].title}"?`)) return;
+      const title = projects[i].title;
+      projects.splice(i, 1);
+      const ok = await commitProjects(`Remove project: ${title}`);
+      if (ok) { renderList(); toast(`Deleted "${title}"`); }
+      else { projects.splice(i, 0, title); toast('Delete failed.', true); }
+    }
+
+    /* ── Toast ───────────────────────────────────────────────────────────── */
+    let toastTimer;
+    function toast(msg, isError = false) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.className   = 'toast' + (isError ? ' error' : '');
+      void el.offsetWidth;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+    }
+
+    /* ── Boot ────────────────────────────────────────────────────────────── */
+    function showAdmin() {
+      document.getElementById('auth-screen').style.display  = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      renderList();
+    }
+
+    async function boot() {
+      const token = getToken();
+      if (token) {
+        const ok = await fetchProjects(token);
+        if (ok) { showAdmin(); return; }
+        localStorage.removeItem('emd_labs_token');
+      }
+      document.getElementById('auth-screen').style.display = 'block';
+    }
+
+    boot();
+  </script>
+</body>
+</html>

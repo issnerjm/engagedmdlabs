@@ -1,0 +1,20 @@
+[
+  {
+    "id": "review-hub",
+    "title": "Review Hub",
+    "category": "Clinical tools",
+    "description": "A staff tool for reviewing, organizing, and approving patient consent videos. Built on React, Supabase, and AWS S3.",
+    "icon": "assets/icons/magnifier.png",
+    "url": "#",
+    "status": "beta"
+  },
+  {
+    "id": "patient-portal",
+    "title": "Patient portal prototype",
+    "category": "Patient experience",
+    "description": "A living design lab for the EngagedMD patient app — tile-based IVF home screen, cycle tracking, and connected sub-pages.",
+    "icon": "assets/icons/journey-arrow.png",
+    "url": "https://patient-portal-prototype-pied.vercel.app",
+    "status": "internal"
+  }
+]

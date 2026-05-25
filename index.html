@@ -367,51 +367,7 @@
     <!-- Projects -->
     <section class="section">
       <p class="section__eyebrow">Projects</p>
-      <div class="project-grid">
-
-        <!-- Review Hub -->
-        <a href="#" class="card">
-          <div class="card__eyebrow">
-            <img src="assets/icons/magnifier.png" alt="" class="card__icon">
-            <span class="card__label">Clinical tools</span>
-          </div>
-          <h2 class="card__title">Review Hub</h2>
-          <p class="card__desc">
-           A tool to make it easier to manage and collect feedback on the EngagedMD content library.
-          </p>
-          <div class="card__footer">
-            <span class="card__cta">
-              Open
-              <svg class="card__cta-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M2.5 7h9m0 0L8 3.5M11.5 7 8 10.5" stroke="#005459" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-            <span class="pill pill--dev">Beta</span>
-          </div>
-        </a>
-
-        <!-- Patient Portal Prototype -->
-        <a href="https://patient-portal-prototype-pied.vercel.app" class="card" target="_blank" rel="noopener noreferrer">
-          <div class="card__eyebrow">
-            <img src="assets/icons/journey-arrow.png" alt="" class="card__icon">
-            <span class="card__label">Patient experience</span>
-          </div>
-          <h2 class="card__title">Patient portal prototype</h2>
-          <p class="card__desc">
-            A living design lab for the EngagedMD patient app.
-          </p>
-          <div class="card__footer">
-            <span class="card__cta">
-              Open
-              <svg class="card__cta-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M2.5 7h9m0 0L8 3.5M11.5 7 8 10.5" stroke="#005459" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-            <span class="pill pill--internal">Internal only</span>
-          </div>
-        </a>
-
-      </div>
+      <div id="project-grid" class="project-grid"></div>
     </section>
 
     <hr class="divider">
@@ -423,5 +379,44 @@
     </footer>
 
   </div>
+
+  <script>
+    const ARROW = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M2.5 7h9m0 0L8 3.5M11.5 7 8 10.5" stroke="#005459" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+    const STATUS = {
+      beta:          { cls: 'pill--dev',      label: 'Beta' },
+      internal:      { cls: 'pill--internal', label: 'Internal only' },
+      live:          { cls: 'pill--live',     label: 'Live' },
+      'coming-soon': { cls: 'pill--dev',      label: 'Coming soon' },
+    };
+
+    function cardHTML(p) {
+      const s = STATUS[p.status] || STATUS.beta;
+      const external = p.url && p.url !== '#';
+      return `
+        <a href="${p.url || '#'}" class="card"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>
+          <div class="card__eyebrow">
+            <img src="${p.icon}" alt="" class="card__icon">
+            <span class="card__label">${p.category}</span>
+          </div>
+          <h2 class="card__title">${p.title}</h2>
+          <p class="card__desc">${p.description}</p>
+          <div class="card__footer">
+            <span class="card__cta">Open ${ARROW}</span>
+            <span class="pill ${s.cls}">${s.label}</span>
+          </div>
+        </a>`;
+    }
+
+    fetch('projects.json')
+      .then(r => r.json())
+      .then(projects => {
+        document.getElementById('project-grid').innerHTML = projects.map(cardHTML).join('');
+      })
+      .catch(() => {
+        document.getElementById('project-grid').innerHTML =
+          '<p style="color:var(--emd-ink-3);font-size:14px">Could not load projects.</p>';
+      });
+  </script>
 </body>
 </html>
