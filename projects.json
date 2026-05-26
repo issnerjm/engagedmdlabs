@@ -5,14 +5,14 @@
     "category": "Clinical tools",
     "description": "A tool to manage EngagedMD's content libraries and collect feedback.",
     "icon": "assets/icons/star.png",
-    "url": "www.engagedmdlabs.com/reviewhub",
+    "url": "/reviewhub",
     "status": "beta"
   },
   {
     "id": "patient-portal-prototype",
     "title": "Patient portal prototype",
     "category": "Patient experience",
-    "description": "A living design lab for the EngagedMD patient app Ã¢ÂÂ tile-based IVF home screen, cycle tracking, and connected sub-pages.",
+    "description": "A living design lab for the EngagedMD patient app ÃÂ¢ÃÂÃÂ tile-based IVF home screen, cycle tracking, and connected sub-pages.",
     "icon": "assets/icons/laptop-e.png",
     "url": "https://patient-portal-prototype-pied.vercel.app",
     "status": "internal"
