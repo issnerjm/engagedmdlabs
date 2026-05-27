@@ -390,17 +390,35 @@
       'coming-soon': { cls: 'pill--dev',      label: 'Coming soon' },
     };
 
+    // Escape text before it goes into innerHTML — projects.json content is
+    // editable by staff and must never be treated as trusted markup.
+    function esc(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    // Only allow http(s) links or root-relative paths; block javascript:/data: URIs.
+    function safeUrl(u) {
+      if (!u || u === '#') return '#';
+      if (/^https?:\/\//i.test(u) || /^\/[^/]/.test(u) || u === '/') return u;
+      return '#';
+    }
+
     function cardHTML(p) {
       const s = STATUS[p.status] || STATUS.beta;
-      const external = p.url && p.url !== '#';
+      const url = safeUrl(p.url);
+      const external = /^https?:\/\//i.test(url);
       return `
-        <a href="${p.url || '#'}" class="card"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>
+        <a href="${esc(url)}" class="card"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>
           <div class="card__eyebrow">
-            <img src="${p.icon}" alt="" class="card__icon">
-            <span class="card__label">${p.category}</span>
+            <img src="${esc(p.icon)}" alt="" class="card__icon">
+            <span class="card__label">${esc(p.category)}</span>
           </div>
-          <h2 class="card__title">${p.title}</h2>
-          <p class="card__desc">${p.description}</p>
+          <h2 class="card__title">${esc(p.title)}</h2>
+          <p class="card__desc">${esc(p.description)}</p>
           <div class="card__footer">
             <span class="card__cta">Open ${ARROW}</span>
             <span class="pill ${s.cls}">${s.label}</span>
