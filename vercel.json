@@ -1,6 +1,8 @@
 {
   "rewrites": [
     { "source": "/reviewhub", "destination": "https://engagedmd-review-hub.vercel.app" },
-    { "source": "/reviewhub/:path*", "destination": "https://engagedmd-review-hub.vercel.app/:path*" }
+    { "source": "/reviewhub/:path*", "destination": "https://engagedmd-review-hub.vercel.app/:path*" },
+    { "source": "/maps", "destination": "https://mutual-action-plans.vercel.app/maps" },
+    { "source": "/maps/:path*", "destination": "https://mutual-action-plans.vercel.app/maps/:path*" }
   ]
 }
