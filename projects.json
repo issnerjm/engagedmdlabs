@@ -17,4 +17,13 @@
     "url": "https://patient-portal-prototype-pied.vercel.app",
     "status": "internal"
   }
+  {
+  "id": "mutual-action-plans",
+  "title": "Mutual Action Plans",
+  "category": "Sales tools",
+  "description": "Shared close plans you and your customers work through together.",
+  "icon": "assets/icons/star.png",
+  "url": "/maps",
+  "status": "beta"
+}
 ]
